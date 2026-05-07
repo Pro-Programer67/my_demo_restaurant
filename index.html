@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maison Ardent — Fine Dining</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:    #130e07;
+      --deep:   #1d1508;
+      --amber:  #c8791e;
+      --gold:   #e2a84b;
+      --cream:  #f0e6d0;
+      --mist:   #a09080;
+      --rule:   rgba(200,121,30,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ink);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: 0.45;
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 2rem 4rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.5s, padding 0.4s;
+    }
+    nav.scrolled {
+      background: rgba(19,14,7,0.92);
+      backdrop-filter: blur(12px);
+      padding: 1.2rem 4rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .nav-wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 300;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+    }
+    .nav-wordmark span { color: var(--amber); font-style: italic; }
+    .nav-links {
+      display: flex;
+      gap: 2.8rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--mist);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--cream); }
+    .nav-reserve {
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--amber);
+      border: 1px solid var(--amber);
+      padding: 0.6rem 1.4rem;
+      text-decoration: none;
+      transition: background 0.3s, color 0.3s;
+    }
+    .nav-reserve:hover {
+      background: var(--amber);
+      color: var(--ink);
+    }
+
+    /* ── LANGUAGE TOGGLE ── */
+    .lang-toggle {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      margin-right: 1.8rem;
+    }
+    .lang-sep {
+      color: var(--rule);
+      font-size: 0.75rem;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+    }
+    .lang-btn {
+      background: none;
+      border: none;
+      color: var(--mist);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      padding: 0.3rem 0.55rem;
+      border-radius: 2px;
+      transition: color 0.3s, background 0.3s;
+      line-height: 1;
+    }
+    .lang-btn:hover { color: var(--cream); }
+    .lang-btn.active {
+      color: var(--amber);
+      background: rgba(200,121,30,0.08);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+    }
+    .hero-image {
+      grid-column: 1 / -1;
+      position: absolute;
+      inset: 0;
+    }
+    .hero-image img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      filter: brightness(0.45) saturate(0.8);
+    }
+    .hero-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to right,
+        rgba(19,14,7,0.85) 0%,
+        rgba(19,14,7,0.2) 55%,
+        rgba(19,14,7,0.6) 100%
+      );
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 4rem 8rem 7rem;
+      grid-column: 1;
+    }
+    .hero-eyebrow {
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.9s 0.3s forwards;
+    }
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(4rem, 7vw, 7.5rem);
+      font-weight: 300;
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      margin-bottom: 2rem;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: fadeUp 1s 0.55s forwards;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--gold);
+      display: block;
+    }
+    .hero-desc {
+      font-size: 0.95rem;
+      line-height: 1.8;
+      color: var(--mist);
+      max-width: 400px;
+      margin-bottom: 3rem;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.9s 0.8s forwards;
+    }
+    .hero-ctas {
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeUp 0.9s 1s forwards;
+    }
+    .btn-primary {
+      background: var(--amber);
+      color: var(--ink);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 1rem 2.4rem;
+      text-decoration: none;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover {
+      background: var(--gold);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--cream);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: color 0.3s;
+    }
+    .btn-ghost::after {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--amber);
+      transition: width 0.3s;
+    }
+    .btn-ghost:hover { color: var(--gold); }
+    .btn-ghost:hover::after { width: 50px; }
+
+    .hero-scroll {
+      position: absolute;
+      right: 4rem;
+      bottom: 4rem;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.8rem;
+      opacity: 0;
+      animation: fadeUp 1s 1.3s forwards;
+    }
+    .hero-scroll span {
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--mist);
+      writing-mode: vertical-rl;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--amber), transparent);
+      animation: scrollPulse 2s 2s infinite;
+    }
+
+    /* ── SECTION CHROME ── */
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .section-label::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 1px;
+      background: var(--amber);
+    }
+
+    /* ── STORY ── */
+    .story {
+      padding: 10rem 0;
+      display: grid;
+      grid-template-columns: 1fr 55%;
+      gap: 0;
+      align-items: center;
+      overflow: hidden;
+    }
+    .story-text {
+      padding: 6rem 5rem 6rem 7rem;
+    }
+    .story-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.8rem, 4vw, 4.5rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+    }
+    .story-heading em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .story-body {
+      color: var(--mist);
+      line-height: 1.9;
+      font-size: 0.95rem;
+      margin-bottom: 3rem;
+      max-width: 440px;
+    }
+    .story-stat {
+      display: flex;
+      gap: 3rem;
+      padding-top: 2.5rem;
+      border-top: 1px solid var(--rule);
+    }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.8rem;
+      font-weight: 300;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-top: 0.4rem;
+    }
+    .story-image-wrap {
+      position: relative;
+      height: 680px;
+    }
+    .story-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      display: block;
+    }
+    .story-image-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, var(--ink) 0%, transparent 20%);
+      z-index: 1;
+    }
+    .story-badge {
+      position: absolute;
+      bottom: 3rem;
+      left: -2rem;
+      z-index: 2;
+      background: var(--amber);
+      color: var(--ink);
+      padding: 1.5rem;
+      width: 140px;
+      text-align: center;
+    }
+    .story-badge .badge-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2.2rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+    .story-badge .badge-text {
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      padding: 0 7rem;
+      margin: 2rem 0;
+    }
+    .divider-line { flex: 1; height: 1px; background: var(--rule); }
+    .divider-ornament {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      color: var(--amber);
+      font-style: italic;
+    }
+
+    /* ── MENU ── */
+    .menu-section {
+      padding: 8rem 7rem;
+      background: var(--deep);
+    }
+    .menu-header {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      margin-bottom: 6rem;
+      align-items: end;
+    }
+    .menu-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1;
+    }
+    .menu-title em {
+      font-style: italic;
+      color: var(--gold);
+      display: block;
+    }
+    .menu-intro {
+      color: var(--mist);
+      line-height: 1.85;
+      font-size: 0.93rem;
+      padding-bottom: 0.5rem;
+    }
+
+    .menu-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 4rem;
+      border-bottom: 1px solid var(--rule);
+    }
+    .menu-tab {
+      background: none;
+      border: none;
+      color: var(--mist);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem 2rem;
+      cursor: pointer;
+      position: relative;
+      transition: color 0.3s;
+    }
+    .menu-tab.active { color: var(--cream); }
+    .menu-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; right: 0;
+      height: 2px;
+      background: var(--amber);
+    }
+    .menu-tab:hover { color: var(--cream); }
+
+    .menu-panel { display: none; }
+    .menu-panel.active { display: block; }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+    }
+    .menu-item {
+      padding: 2rem 2.5rem 2rem 0;
+      border-bottom: 1px solid var(--rule);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1.5rem;
+      align-items: start;
+      transition: background 0.2s;
+    }
+    .menu-item:nth-child(even) {
+      padding-left: 2.5rem;
+      padding-right: 0;
+      border-left: 1px solid var(--rule);
+    }
+    .menu-item:hover { background: rgba(200,121,30,0.04); }
+    .item-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.25rem;
+      font-weight: 400;
+      margin-bottom: 0.4rem;
+    }
+    .item-desc {
+      font-size: 0.8rem;
+      color: var(--mist);
+      line-height: 1.6;
+      font-style: italic;
+    }
+    .item-price {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.2rem;
+      color: var(--amber);
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    /* ── CHEF ── */
+    .chef-section {
+      padding: 10rem 0;
+      display: grid;
+      grid-template-columns: 52% 1fr;
+      gap: 0;
+      overflow: hidden;
+    }
+    .chef-image-wrap {
+      position: relative;
+      height: 700px;
+    }
+    .chef-image-wrap img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .chef-image-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to left, var(--ink) 0%, transparent 25%);
+    }
+    .chef-text {
+      padding: 6rem 7rem 6rem 5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .chef-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.5rem, 3.5vw, 4rem);
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    .chef-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 2.5rem;
+    }
+    .chef-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.6rem;
+      font-style: italic;
+      font-weight: 300;
+      line-height: 1.5;
+      color: var(--gold);
+      border-left: 2px solid var(--amber);
+      padding-left: 1.8rem;
+      margin-bottom: 2.5rem;
+    }
+    .chef-bio {
+      color: var(--mist);
+      line-height: 1.9;
+      font-size: 0.93rem;
+    }
+
+    /* ── RESERVATION ── */
+    .reservation-section {
+      padding: 8rem 0;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+    .reservation-section::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(200,121,30,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .reservation-inner {
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 0 4rem;
+      text-align: center;
+    }
+    .res-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 5vw, 5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      margin-bottom: 1.5rem;
+    }
+    .res-heading em {
+      font-style: italic;
+      color: var(--gold);
+      display: block;
+    }
+    .res-sub {
+      color: var(--mist);
+      font-size: 0.93rem;
+      line-height: 1.8;
+      margin-bottom: 3.5rem;
+    }
+    .res-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .form-field {
+      position: relative;
+    }
+    .form-field.full { grid-column: 1 / -1; }
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--rule);
+      color: var(--cream);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.88rem;
+      padding: 1.1rem 1.3rem;
+      outline: none;
+      transition: border-color 0.3s;
+      appearance: none;
+    }
+    .form-field input::placeholder,
+    .form-field textarea::placeholder { color: var(--mist); }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: var(--amber);
+    }
+    .form-field textarea { resize: vertical; min-height: 110px; }
+    .form-field select { color: var(--mist); cursor: pointer; }
+    .form-field select option { background: var(--deep); color: var(--cream); }
+    .form-submit {
+      grid-column: 1 / -1;
+      margin-top: 0.5rem;
+    }
+    .form-submit button {
+      width: 100%;
+      background: var(--amber);
+      border: none;
+      color: var(--ink);
+      font-family: 'Jost', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1.2rem 2rem;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .form-submit button:hover {
+      background: var(--gold);
+      transform: translateY(-2px);
+    }
+    .form-note {
+      grid-column: 1 / -1;
+      font-size: 0.72rem;
+      color: var(--mist);
+      letter-spacing: 0.05em;
+      margin-top: 0.5rem;
+    }
+
+    /* ── HOURS STRIP ── */
+    .hours-strip {
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+    .hours-item {
+      padding: 3rem 4rem;
+      text-align: center;
+      border-right: 1px solid var(--rule);
+    }
+    .hours-item:last-child { border-right: none; }
+    .hours-day {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--mist);
+      margin-bottom: 0.6rem;
+    }
+    .hours-time {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--cream);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 5rem 7rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 4rem;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-brand .wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.5rem;
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .footer-brand .wordmark span {
+      color: var(--amber);
+      font-style: italic;
+    }
+    .footer-brand p {
+      color: var(--mist);
+      font-size: 0.85rem;
+      line-height: 1.8;
+      margin-top: 1.2rem;
+    }
+    .footer-col h4 {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+    }
+    .footer-col p,
+    .footer-col a {
+      color: var(--mist);
+      font-size: 0.85rem;
+      line-height: 1.9;
+      text-decoration: none;
+      display: block;
+      transition: color 0.3s;
+    }
+    .footer-col a:hover { color: var(--cream); }
+    .footer-bottom {
+      padding: 2rem 7rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--rule);
+    }
+    .footer-bottom p {
+      font-size: 0.72rem;
+      color: var(--mist);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── SCROLL REVEAL ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s ease, transform 0.9s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: 0.15s; }
+    .reveal-delay-2 { transition-delay: 0.3s; }
+    .reveal-delay-3 { transition-delay: 0.45s; }
+
+    /* ── KEYFRAMES ── */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 1; transform: scaleY(1); }
+      50% { opacity: 0.3; transform: scaleY(0.7); }
+    }
+
+    /* ── SUCCESS STATE ── */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+    }
+    .form-success.visible { display: block; }
+    .form-success .success-icon {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3rem;
+      color: var(--gold);
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+    .form-success h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem;
+      font-weight: 300;
+      margin-bottom: 0.8rem;
+    }
+    .form-success p { color: var(--mist); font-size: 0.9rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1.5rem 2rem; }
+      nav.scrolled { padding: 1rem 2rem; }
+      .nav-links { display: none; }
+      .hero-content { padding: 0 2rem 5rem 2rem; }
+      .hero-scroll { display: none; }
+      .story { grid-template-columns: 1fr; }
+      .story-text { padding: 4rem 2rem; }
+      .story-image-wrap { height: 420px; }
+      .story-image-wrap::before { display: none; }
+      .story-badge { left: 1rem; }
+      .menu-section { padding: 5rem 2rem; }
+      .menu-header { grid-template-columns: 1fr; gap: 2rem; }
+      .menu-grid { grid-template-columns: 1fr; }
+      .menu-item:nth-child(even) { padding-left: 0; border-left: none; }
+      .chef-section { grid-template-columns: 1fr; }
+      .chef-image-wrap { height: 400px; }
+      .chef-image-wrap::after { display: none; }
+      .chef-text { padding: 4rem 2rem; }
+      .reservation-inner { padding: 0 2rem; }
+      .res-form { grid-template-columns: 1fr; }
+      .hours-strip { flex-wrap: wrap; }
+      .hours-item { flex: 1; min-width: 150px; }
+      footer { grid-template-columns: 1fr; padding: 3rem 2rem; }
+      .footer-bottom { flex-direction: column; gap: 1rem; padding: 1.5rem 2rem; }
+      .divider { padding: 0 2rem; }
+      .lang-toggle { margin-right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav id="main-nav">
+    <a href="#" class="nav-wordmark">Maison <span>Ardent</span></a>
+    <ul class="nav-links">
+      <li><a href="#menu" data-i18n="nav-menu">Menu</a></li>
+      <li><a href="#chef" data-i18n="nav-chef">The Chef</a></li>
+      <li><a href="#reserve" data-i18n="nav-reserve">Reserve</a></li>
+    </ul>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">English</button>
+      <span class="lang-sep">|</span>
+      <button class="lang-btn" data-lang="es" onclick="setLanguage('es')">Español</button>
+    </div>
+    <a href="#reserve" class="nav-reserve" data-i18n="nav-reserve-btn">Reserve a Table</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-image">
+      <img src="restaurant.jpg" alt="Maison Ardent dining room" />
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow" data-i18n-html="hero-eyebrow">Est. 2017 &nbsp;&mdash;&nbsp; Bordeaux &amp; Beyond</p>
+      <h1 class="hero-title" data-i18n-html="hero-title">
+        Where fire<br>
+        <em>shapes every</em><br>
+        plate.
+      </h1>
+      <p class="hero-desc" data-i18n="hero-desc">A dining experience rooted in live-fire tradition, seasonal provenance, and the quiet confidence of a kitchen that needs no shortcuts.</p>
+      <div class="hero-ctas">
+        <a href="#reserve" class="btn-primary" data-i18n="hero-cta-primary">Reserve Your Evening</a>
+        <a href="#menu" class="btn-ghost" data-i18n="hero-cta-ghost">Explore the Menu</a>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span data-i18n="hero-scroll">Scroll</span>
+    </div>
+  </section>
+
+  <!-- DIVIDER -->
+  <div class="divider">
+    <div class="divider-line"></div>
+    <span class="divider-ornament">&mdash; &amp; &mdash;</span>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- STORY -->
+  <section class="story" id="about">
+    <div class="story-text">
+      <p class="section-label reveal" data-i18n="story-label">Our Story</p>
+      <h2 class="story-heading reveal reveal-delay-1" data-i18n-html="story-heading">
+        Honest food,<br>
+        <em>uncompromising</em><br>
+        craft.
+      </h2>
+      <p class="story-body reveal reveal-delay-2" data-i18n="story-body-1">
+        Maison Ardent was born from a single conviction: that the oldest cooking method — fire — is still the most revelatory. Every dish begins at the hearth, where smoke, heat, and time transform the finest local ingredients into something extraordinary.
+      </p>
+      <p class="story-body reveal reveal-delay-2" data-i18n="story-body-2">
+        Our suppliers are farmers, fishers, and foragers within 80 miles of our kitchen. The menu changes when the land does. Nothing more, nothing less.
+      </p>
+      <div class="story-stat reveal reveal-delay-3">
+        <div>
+          <div class="stat-num">12</div>
+          <div class="stat-label" data-i18n="stat-tables">Tables only</div>
+        </div>
+        <div>
+          <div class="stat-num">6</div>
+          <div class="stat-label" data-i18n="stat-courses">Course tasting menu</div>
+        </div>
+        <div>
+          <div class="stat-num">80</div>
+          <div class="stat-label" data-i18n="stat-miles">Mile sourcing radius</div>
+        </div>
+      </div>
+    </div>
+    <div class="story-image-wrap">
+      <img src="restaurant.jpg" alt="The Maison Ardent dining room" />
+      <div class="story-badge">
+        <div class="badge-num">4.9</div>
+        <div class="badge-text" data-i18n="badge-text">Michelin Recognition</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MENU -->
+  <section class="menu-section" id="menu">
+    <div class="menu-header">
+      <div>
+        <p class="section-label reveal" data-i18n="menu-label">Seasonal Menu</p>
+        <h2 class="menu-title reveal reveal-delay-1" data-i18n-html="menu-title">
+          This<br><em>Season's</em><br>Table.
+        </h2>
+      </div>
+      <p class="menu-intro reveal reveal-delay-2" data-i18n="menu-intro">
+        Our menu breathes with the seasons. What follows is a reflection of the current harvest — ingredients chosen this week, prepared over fire tonight. Prices reflect a single course; tasting menus available on reservation.
+      </p>
+    </div>
+
+    <div class="menu-tabs reveal">
+      <button class="menu-tab active" data-tab="starters" data-i18n="tab-starters">Starters</button>
+      <button class="menu-tab" data-tab="mains" data-i18n="tab-mains">Mains</button>
+      <button class="menu-tab" data-tab="desserts" data-i18n="tab-desserts">Desserts</button>
+      <button class="menu-tab" data-tab="wine" data-i18n="tab-wine">Wine</button>
+    </div>
+
+    <div class="menu-panel active" id="tab-starters">
+      <div class="menu-grid">
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name" data-i18n="s1-name">Wood-Roasted Beetroot</div>
+            <div class="item-desc" data-i18n="s1-desc">Aged goat's curd, ash oil, pickled walnut, micro sorrel</div>
+          </div>
+          <div class="item-price">18</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name" data-i18n="s2-name">Smoked Bone Marrow</div>
+            <div class="item-desc" data-i18n="s2-desc">Fermented black garlic, sourdough toast, herbs from the garden</div>
+          </div>
+          <div class="item-price">22</div>
+        </div>
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name" data-i18n="s3-name">Charred Hispi Cabbage</div>
+            <div class="item-desc" data-i18n="s3-desc">Buttermilk, caperberries, preserved lemon, crispy capers</div>
+          </div>
+          <div class="item-price">16</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name" data-i18n="s4-name">Hand-Dived Scallops</div>
+            <div class="item-desc" data-i18n="s4-desc">Cauliflower, brown butter, coastal herbs, sea herbs</div>
+          </div>
+          <div class="item-price">28</div>
+        </div>
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name" data-i18n="s5-name">Ember-Cured Salmon</div>
+            <div class="item-desc" data-i18n="s5-desc">Cucumber water, dill, horseradish cream, trout roe</div>
+          </div>
+          <div class="item-price">24</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name" data-i18n="s6-name">Confit Duck Croquette</div>
+            <div class="item-desc" data-i18n="s6-desc">Smoked cherry gel, watercress, mustard leaf</div>
+          </div>
+          <div class="item-price">20</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="tab-mains">
+      <div class="menu-grid">
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name" data-i18n="m1-name">Fire-Aged Côte de Bœuf</div>
+            <div class="item-desc" data-i18n="m1-desc">Bone marrow butter, heritage potatoes, charred onion soubise</div>
+          </div>
+          <div class="item-price">68</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name" data-i18n="m2-name">Whole Roasted Sea Bass</div>
+            <div class="item-desc" data-i18n="m2-desc">Fennel, saffron broth, monk's beard, toasted almonds</div>
+          </div>
+          <div class="item-price">54</div>
+        </div>
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name" data-i18n="m3-name">Lamb Rack &amp; Shoulder</div>
+            <div class="item-desc" data-i18n="m3-desc">Slow-cooked shoulder, rack over coals, spring peas, mint</div>
+          </div>
+          <div class="item-price">62</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name" data-i18n="m4-name">Celeriac &amp; Black Truffle</div>
+            <div class="item-desc" data-i18n="m4-desc">Whole-baked celeriac, truffle butter, hazelnut, aged parmesan</div>
+          </div>
+          <div class="item-price">44</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="tab-desserts">
+      <div class="menu-grid">
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name" data-i18n="d1-name">Burnt Honey Tart</div>
+            <div class="item-desc" data-i18n="d1-desc">Raw honey from the apiary, crème fraîche, toasted lavender</div>
+          </div>
+          <div class="item-price">16</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name" data-i18n="d2-name">Chocolate &amp; Miso</div>
+            <div class="item-desc" data-i18n="d2-desc">Valrhona ganache, white miso caramel, sesame praline</div>
+          </div>
+          <div class="item-price">18</div>
+        </div>
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name" data-i18n="d3-name">Seasonal Cheese Board</div>
+            <div class="item-desc" data-i18n="d3-desc">Three cheeses, housemade quince, fig &amp; walnut loaf</div>
+          </div>
+          <div class="item-price">22</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name" data-i18n="d4-name">Smoked Pear Sorbet</div>
+            <div class="item-desc" data-i18n="d4-desc">Cold-smoked Comice pear, almond tuile, elderflower</div>
+          </div>
+          <div class="item-price">14</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="tab-wine">
+      <div class="menu-grid">
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name">Domaine Leflaive Puligny</div>
+            <div class="item-desc" data-i18n="w1-desc">Burgundy, France &mdash; Chardonnay, 2021</div>
+          </div>
+          <div class="item-price">95</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name">Château Léoville Poyferré</div>
+            <div class="item-desc" data-i18n="w2-desc">Saint-Julien, Bordeaux &mdash; Cabernet blend, 2018</div>
+          </div>
+          <div class="item-price">120</div>
+        </div>
+        <div class="menu-item reveal">
+          <div>
+            <div class="item-name">Gut Oggau Theodora</div>
+            <div class="item-desc" data-i18n="w3-desc">Burgenland, Austria &mdash; Biodynamic Grüner, 2022</div>
+          </div>
+          <div class="item-price">78</div>
+        </div>
+        <div class="menu-item reveal reveal-delay-1">
+          <div>
+            <div class="item-name">Clendenen Family Pinot</div>
+            <div class="item-desc" data-i18n="w4-desc">Santa Barbara, California &mdash; Pinot Noir, 2020</div>
+          </div>
+          <div class="item-price">88</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CHEF -->
+  <section class="chef-section" id="chef">
+    <div class="chef-image-wrap">
+      <img src="chef.jpg" alt="Chef Lucien Marais" />
+    </div>
+    <div class="chef-text">
+      <p class="section-label reveal" data-i18n="chef-label">The Kitchen</p>
+      <h2 class="chef-name reveal reveal-delay-1">Chef Lucien<br>Marais</h2>
+      <p class="chef-title reveal reveal-delay-1" data-i18n="chef-title">Executive Chef &amp; Founder</p>
+      <blockquote class="chef-quote reveal reveal-delay-2" data-i18n="chef-quote">
+        "Fire tells you the truth about an ingredient. Everything else is distraction."
+      </blockquote>
+      <p class="chef-bio reveal reveal-delay-2" data-i18n="chef-bio-1">
+        Lucien trained under Heston Blumenthal at The Fat Duck before spending three formative years in the Basque Country, learning live-fire technique from the grill masters of Asador Etxebarri. He returned to open Maison Ardent with a single hearth, twelve tables, and an unshakeable conviction about how food should taste.
+      </p>
+      <br />
+      <p class="chef-bio reveal reveal-delay-3" data-i18n="chef-bio-2">
+        Today, Lucien leads a kitchen of seven, sourcing directly from the farms he grew up near, cooking meals he'd want to eat, and refusing to compromise on ingredients — ever.
+      </p>
+    </div>
+  </section>
+
+  <!-- HOURS -->
+  <div class="hours-strip">
+    <div class="hours-item">
+      <div class="hours-day" data-i18n="hours-day-1">Tuesday &mdash; Thursday</div>
+      <div class="hours-time">6:00 &ndash; 10:30 pm</div>
+    </div>
+    <div class="hours-item">
+      <div class="hours-day" data-i18n="hours-day-2">Friday &mdash; Saturday</div>
+      <div class="hours-time">5:30 &ndash; 11:00 pm</div>
+    </div>
+    <div class="hours-item">
+      <div class="hours-day" data-i18n="hours-day-3">Sunday</div>
+      <div class="hours-time">12:00 &ndash; 4:00 pm</div>
+    </div>
+    <div class="hours-item">
+      <div class="hours-day" data-i18n="hours-day-4">Monday</div>
+      <div class="hours-time" data-i18n="hours-closed">Closed</div>
+    </div>
+  </div>
+
+  <!-- RESERVATION -->
+  <section class="reservation-section" id="reserve">
+    <div class="reservation-inner">
+      <p class="section-label reveal" style="justify-content:center; padding-left:0;">
+        <span></span><span data-i18n="res-label">Book Your Table</span>
+      </p>
+      <h2 class="res-heading reveal reveal-delay-1" data-i18n-html="res-heading">
+        An evening<br><em>awaits.</em>
+      </h2>
+      <p class="res-sub reveal reveal-delay-2" data-i18n="res-sub">
+        We hold twelve tables each service. Reservations are recommended at least five days in advance. For private dining or special occasions, please contact us directly.
+      </p>
+
+      <form class="res-form reveal reveal-delay-2" id="reservation-form" onsubmit="handleReservation(event)">
+        <div class="form-field">
+          <input type="text" data-i18n-placeholder="placeholder-name" placeholder="First &amp; Last Name" required />
+        </div>
+        <div class="form-field">
+          <input type="email" data-i18n-placeholder="placeholder-email" placeholder="Email Address" required />
+        </div>
+        <div class="form-field">
+          <input type="date" required style="color: var(--mist);" />
+        </div>
+        <div class="form-field">
+          <select required>
+            <option value="" disabled selected data-i18n="select-time">Time Preference</option>
+            <option>5:30 pm</option>
+            <option>6:00 pm</option>
+            <option>7:00 pm</option>
+            <option>7:30 pm</option>
+            <option>8:30 pm</option>
+            <option>9:00 pm</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <select required>
+            <option value="" disabled selected data-i18n="select-party">Party Size</option>
+            <option data-i18n="party-1">1 guest</option>
+            <option data-i18n="party-2">2 guests</option>
+            <option data-i18n="party-3">3 guests</option>
+            <option data-i18n="party-4">4 guests</option>
+            <option data-i18n="party-5">5 guests</option>
+            <option data-i18n="party-6">6 guests</option>
+            <option data-i18n="party-large">Larger party &mdash; please call</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <select>
+            <option value="" disabled selected data-i18n="select-occasion">Occasion (optional)</option>
+            <option data-i18n="occ-birthday">Birthday</option>
+            <option data-i18n="occ-anniversary">Anniversary</option>
+            <option data-i18n="occ-business">Business dinner</option>
+            <option data-i18n="occ-celebration">Celebration</option>
+            <option data-i18n="occ-none">No special occasion</option>
+          </select>
+        </div>
+        <div class="form-field full">
+          <textarea data-i18n-placeholder="placeholder-textarea" placeholder="Dietary requirements or special requests..."></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit" data-i18n="res-submit">Request Reservation</button>
+        </div>
+        <p class="form-note" data-i18n="form-note">We will confirm your reservation within 24 hours.</p>
+      </form>
+
+      <div class="form-success" id="form-success">
+        <div class="success-icon">&#10003;</div>
+        <h3 data-i18n="success-h3">Request Received</h3>
+        <p data-i18n="success-p">Thank you. We will be in touch within 24 hours to confirm your table.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-brand">
+      <div class="wordmark">Maison <span>Ardent</span></div>
+      <p data-i18n="footer-brand-p">A live-fire restaurant committed to the seasons, the land, and the honest pleasure of a meal made with care.</p>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer-visit">Visit Us</h4>
+      <p>14 Rue du Feu</p>
+      <p>Bordeaux, 33000</p>
+      <p>France</p>
+      <br />
+      <a href="tel:+33556001234">+33 5 56 00 12 34</a>
+      <a href="mailto:hello@maisonardent.fr">hello@maisonardent.fr</a>
+    </div>
+    <div class="footer-col">
+      <h4 data-i18n="footer-nav-heading">Navigation</h4>
+      <a href="#about" data-i18n="footer-nav-about">Our Story</a>
+      <a href="#menu" data-i18n="footer-nav-menu">Seasonal Menu</a>
+      <a href="#chef" data-i18n="footer-nav-chef">The Chef</a>
+      <a href="#reserve" data-i18n="footer-nav-reserve">Reservations</a>
+    </div>
+  </footer>
+  <div class="footer-bottom">
+    <p data-i18n="footer-copy">&copy; 2026 Maison Ardent. All rights reserved.</p>
+    <p data-i18n="footer-tagline">Designed for the pleasure of good company.</p>
+  </div>
+
+  <script>
+    // ── TRANSLATIONS ──
+    const translations = {
+      en: {
+        'nav-menu': 'Menu',
+        'nav-chef': 'The Chef',
+        'nav-reserve': 'Reserve',
+        'nav-reserve-btn': 'Reserve a Table',
+        'hero-eyebrow': 'Est. 2017 &nbsp;&mdash;&nbsp; Bordeaux &amp; Beyond',
+        'hero-title': 'Where fire<br><em>shapes every</em><br>plate.',
+        'hero-desc': 'A dining experience rooted in live-fire tradition, seasonal provenance, and the quiet confidence of a kitchen that needs no shortcuts.',
+        'hero-cta-primary': 'Reserve Your Evening',
+        'hero-cta-ghost': 'Explore the Menu',
+        'hero-scroll': 'Scroll',
+        'story-label': 'Our Story',
+        'story-heading': 'Honest food,<br><em>uncompromising</em><br>craft.',
+        'story-body-1': 'Maison Ardent was born from a single conviction: that the oldest cooking method — fire — is still the most revelatory. Every dish begins at the hearth, where smoke, heat, and time transform the finest local ingredients into something extraordinary.',
+        'story-body-2': 'Our suppliers are farmers, fishers, and foragers within 80 miles of our kitchen. The menu changes when the land does. Nothing more, nothing less.',
+        'stat-tables': 'Tables only',
+        'stat-courses': 'Course tasting menu',
+        'stat-miles': 'Mile sourcing radius',
+        'badge-text': 'Michelin Recognition',
+        'menu-label': 'Seasonal Menu',
+        'menu-title': 'This<br><em>Season\'s</em><br>Table.',
+        'menu-intro': 'Our menu breathes with the seasons. What follows is a reflection of the current harvest — ingredients chosen this week, prepared over fire tonight. Prices reflect a single course; tasting menus available on reservation.',
+        'tab-starters': 'Starters',
+        'tab-mains': 'Mains',
+        'tab-desserts': 'Desserts',
+        'tab-wine': 'Wine',
+        's1-name': 'Wood-Roasted Beetroot',
+        's1-desc': "Aged goat's curd, ash oil, pickled walnut, micro sorrel",
+        's2-name': 'Smoked Bone Marrow',
+        's2-desc': 'Fermented black garlic, sourdough toast, herbs from the garden',
+        's3-name': 'Charred Hispi Cabbage',
+        's3-desc': 'Buttermilk, caperberries, preserved lemon, crispy capers',
+        's4-name': 'Hand-Dived Scallops',
+        's4-desc': 'Cauliflower, brown butter, coastal herbs, sea herbs',
+        's5-name': 'Ember-Cured Salmon',
+        's5-desc': 'Cucumber water, dill, horseradish cream, trout roe',
+        's6-name': 'Confit Duck Croquette',
+        's6-desc': 'Smoked cherry gel, watercress, mustard leaf',
+        'm1-name': 'Fire-Aged Côte de Bœuf',
+        'm1-desc': 'Bone marrow butter, heritage potatoes, charred onion soubise',
+        'm2-name': 'Whole Roasted Sea Bass',
+        'm2-desc': "Fennel, saffron broth, monk's beard, toasted almonds",
+        'm3-name': 'Lamb Rack & Shoulder',
+        'm3-desc': 'Slow-cooked shoulder, rack over coals, spring peas, mint',
+        'm4-name': 'Celeriac & Black Truffle',
+        'm4-desc': 'Whole-baked celeriac, truffle butter, hazelnut, aged parmesan',
+        'd1-name': 'Burnt Honey Tart',
+        'd1-desc': 'Raw honey from the apiary, crème fraîche, toasted lavender',
+        'd2-name': 'Chocolate & Miso',
+        'd2-desc': 'Valrhona ganache, white miso caramel, sesame praline',
+        'd3-name': 'Seasonal Cheese Board',
+        'd3-desc': 'Three cheeses, housemade quince, fig & walnut loaf',
+        'd4-name': 'Smoked Pear Sorbet',
+        'd4-desc': 'Cold-smoked Comice pear, almond tuile, elderflower',
+        'w1-desc': 'Burgundy, France — Chardonnay, 2021',
+        'w2-desc': 'Saint-Julien, Bordeaux — Cabernet blend, 2018',
+        'w3-desc': 'Burgenland, Austria — Biodynamic Grüner, 2022',
+        'w4-desc': 'Santa Barbara, California — Pinot Noir, 2020',
+        'chef-label': 'The Kitchen',
+        'chef-title': 'Executive Chef & Founder',
+        'chef-quote': '“Fire tells you the truth about an ingredient. Everything else is distraction.”',
+        'chef-bio-1': 'Lucien trained under Heston Blumenthal at The Fat Duck before spending three formative years in the Basque Country, learning live-fire technique from the grill masters of Asador Etxebarri. He returned to open Maison Ardent with a single hearth, twelve tables, and an unshakeable conviction about how food should taste.',
+        'chef-bio-2': 'Today, Lucien leads a kitchen of seven, sourcing directly from the farms he grew up near, cooking meals he’d want to eat, and refusing to compromise on ingredients — ever.',
+        'hours-day-1': 'Tuesday — Thursday',
+        'hours-day-2': 'Friday — Saturday',
+        'hours-day-3': 'Sunday',
+        'hours-day-4': 'Monday',
+        'hours-closed': 'Closed',
+        'res-label': 'Book Your Table',
+        'res-heading': 'An evening<br><em>awaits.</em>',
+        'res-sub': 'We hold twelve tables each service. Reservations are recommended at least five days in advance. For private dining or special occasions, please contact us directly.',
+        'placeholder-name': 'First & Last Name',
+        'placeholder-email': 'Email Address',
+        'select-time': 'Time Preference',
+        'select-party': 'Party Size',
+        'party-1': '1 guest',
+        'party-2': '2 guests',
+        'party-3': '3 guests',
+        'party-4': '4 guests',
+        'party-5': '5 guests',
+        'party-6': '6 guests',
+        'party-large': 'Larger party — please call',
+        'select-occasion': 'Occasion (optional)',
+        'occ-birthday': 'Birthday',
+        'occ-anniversary': 'Anniversary',
+        'occ-business': 'Business dinner',
+        'occ-celebration': 'Celebration',
+        'occ-none': 'No special occasion',
+        'placeholder-textarea': 'Dietary requirements or special requests...',
+        'res-submit': 'Request Reservation',
+        'form-note': 'We will confirm your reservation within 24 hours.',
+        'success-h3': 'Request Received',
+        'success-p': 'Thank you. We will be in touch within 24 hours to confirm your table.',
+        'footer-brand-p': 'A live-fire restaurant committed to the seasons, the land, and the honest pleasure of a meal made with care.',
+        'footer-visit': 'Visit Us',
+        'footer-nav-heading': 'Navigation',
+        'footer-nav-about': 'Our Story',
+        'footer-nav-menu': 'Seasonal Menu',
+        'footer-nav-chef': 'The Chef',
+        'footer-nav-reserve': 'Reservations',
+        'footer-copy': '© 2026 Maison Ardent. All rights reserved.',
+        'footer-tagline': 'Designed for the pleasure of good company.',
+      },
+      es: {
+        'nav-menu': 'Menú',
+        'nav-chef': 'El Chef',
+        'nav-reserve': 'Reservar',
+        'nav-reserve-btn': 'Reservar Mesa',
+        'hero-eyebrow': 'Est. 2017 &nbsp;&mdash;&nbsp; Burdeos &amp; Más Allá',
+        'hero-title': 'Donde el fuego<br><em>da forma a cada</em><br>plato.',
+        'hero-desc': 'Una experiencia gastronómica arraigada en la tradición del fuego vivo, la procedencia estacional y la tranquila confianza de una cocina que no necesita atajos.',
+        'hero-cta-primary': 'Reserve su Noche',
+        'hero-cta-ghost': 'Explorar el Menú',
+        'hero-scroll': 'Deslizar',
+        'story-label': 'Nuestra Historia',
+        'story-heading': 'Comida honesta,<br><em>artesanía</em><br>sin concesiones.',
+        'story-body-1': 'Maison Ardent nació de una sola convicción: que el método de cocción más antiguo —el fuego— sigue siendo el más revelador. Cada plato comienza en el hogar, donde el humo, el calor y el tiempo transforman los mejores ingredientes locales en algo extraordinario.',
+        'story-body-2': 'Nuestros proveedores son agricultores, pescadores y recolectores dentro de un radio de 80 millas de nuestra cocina. El menú cambia cuando lo hace la tierra. Nada más, nada menos.',
+        'stat-tables': 'Solo mesas',
+        'stat-courses': 'Menú degustación',
+        'stat-miles': 'Millas de origen',
+        'badge-text': 'Reconocimiento Michelin',
+        'menu-label': 'Menú de Temporada',
+        'menu-title': 'La Mesa<br><em>de Esta</em><br>Temporada.',
+        'menu-intro': 'Nuestro menú respira con las estaciones. Lo que sigue es un reflejo de la cosecha actual: ingredientes elegidos esta semana, preparados sobre el fuego esta noche. Los precios reflejan un solo plato; menús degustación disponibles bajo reserva.',
+        'tab-starters': 'Entrantes',
+        'tab-mains': 'Principales',
+        'tab-desserts': 'Postres',
+        'tab-wine': 'Vinos',
+        's1-name': 'Remolacha Asada al Leño',
+        's1-desc': 'Cuajada de cabra curada, aceite de ceniza, nuez encurtida, acedera micro',
+        's2-name': 'Tuétano Ahumado',
+        's2-desc': 'Ajo negro fermentado, tostada de masa madre, hierbas del jardín',
+        's3-name': 'Col Hispi Chamuscada',
+        's3-desc': 'Suero de mantequilla, alcaparrones, limón en conserva, alcaparras crujientes',
+        's4-name': 'Vieiras a Mano',
+        's4-desc': 'Coliflor, mantequilla tostada, hierbas costeras, hierbas marinas',
+        's5-name': 'Salmón Curado en Brasas',
+        's5-desc': 'Agua de pepino, eneldo, crema de rábano picante, huevas de trucha',
+        's6-name': 'Croqueta de Pato Confitado',
+        's6-desc': 'Gel de cereza ahumada, berros, hoja de mostaza',
+        'm1-name': 'Côte de Bœuf Envejecido al Fuego',
+        'm1-desc': 'Mantequilla de tuétano, patatas heritage, soubise de cebolla chamuscada',
+        'm2-name': 'Lubina Entera al Horno',
+        'm2-desc': 'Hinojo, caldo de azafrán, barba de fraile, almendras tostadas',
+        'm3-name': 'Costillar y Paleta de Cordero',
+        'm3-desc': 'Paleta cocinada lentamente, costillar sobre brasas, guisantes de temporada, menta',
+        'm4-name': 'Apio Nabo y Trufa Negra',
+        'm4-desc': 'Apio nabo asado entero, mantequilla de trufa, avellana, parmesano curado',
+        'd1-name': 'Tarta de Miel Quemada',
+        'd1-desc': 'Miel cruda del apiario, crème fraîche, lavanda tostada',
+        'd2-name': 'Chocolate y Miso',
+        'd2-desc': 'Ganache Valrhona, caramelo de miso blanco, praliné de sésamo',
+        'd3-name': 'Tabla de Quesos de Temporada',
+        'd3-desc': 'Tres quesos, membrillo casero, pan de higos y nueces',
+        'd4-name': 'Sorbete de Pera Ahumada',
+        'd4-desc': 'Pera Comice ahumada en frío, tulipa de almendra, flor de saúco',
+        'w1-desc': 'Borgoña, Francia — Chardonnay, 2021',
+        'w2-desc': 'Saint-Julien, Burdeos — Mezcla Cabernet, 2018',
+        'w3-desc': 'Burgenland, Austria — Grüner Biodinámico, 2022',
+        'w4-desc': 'Santa Bárbara, California — Pinot Noir, 2020',
+        'chef-label': 'La Cocina',
+        'chef-title': 'Chef Ejecutivo y Fundador',
+        'chef-quote': '“El fuego te dice la verdad sobre un ingrediente. Todo lo demás es distracción.”',
+        'chef-bio-1': 'Lucien se formó con Heston Blumenthal en The Fat Duck antes de pasar tres años formativos en el País Vasco, aprendiendo la técnica del fuego vivo de los maestros de la parrilla de Asador Etxebarri. Regresó para abrir Maison Ardent con un solo hogar, doce mesas y una convicción inquebrantable sobre cómo debe saber la comida.',
+        'chef-bio-2': 'Hoy, Lucien dirige una cocina de siete personas, abastecida directamente de las granjas donde creció, cocinando platos que él mismo querría comer y negándose a comprometer los ingredientes, siempre.',
+        'hours-day-1': 'Martes — Jueves',
+        'hours-day-2': 'Viernes — Sábado',
+        'hours-day-3': 'Domingo',
+        'hours-day-4': 'Lunes',
+        'hours-closed': 'Cerrado',
+        'res-label': 'Reserve su Mesa',
+        'res-heading': 'Una noche<br><em>le espera.</em>',
+        'res-sub': 'Disponemos de doce mesas por servicio. Se recomienda reservar con al menos cinco días de antelación. Para cenas privadas u ocasiones especiales, contáctenos directamente.',
+        'placeholder-name': 'Nombre y Apellido',
+        'placeholder-email': 'Dirección de Email',
+        'select-time': 'Preferencia de Hora',
+        'select-party': 'Número de Personas',
+        'party-1': '1 invitado',
+        'party-2': '2 invitados',
+        'party-3': '3 invitados',
+        'party-4': '4 invitados',
+        'party-5': '5 invitados',
+        'party-6': '6 invitados',
+        'party-large': 'Grupo grande — llame por favor',
+        'select-occasion': 'Ocasión (opcional)',
+        'occ-birthday': 'Cumpleaños',
+        'occ-anniversary': 'Aniversario',
+        'occ-business': 'Cena de negocios',
+        'occ-celebration': 'Celebración',
+        'occ-none': 'Sin ocasión especial',
+        'placeholder-textarea': 'Requisitos dietéticos o peticiones especiales...',
+        'res-submit': 'Solicitar Reserva',
+        'form-note': 'Confirmaremos su reserva en 24 horas.',
+        'success-h3': 'Solicitud Recibida',
+        'success-p': 'Gracias. Nos pondremos en contacto en 24 horas para confirmar su mesa.',
+        'footer-brand-p': 'Un restaurante de fuego vivo comprometido con las estaciones, la tierra y el placer honesto de una comida hecha con esmero.',
+        'footer-visit': 'Visítenos',
+        'footer-nav-heading': 'Navegación',
+        'footer-nav-about': 'Nuestra Historia',
+        'footer-nav-menu': 'Menú de Temporada',
+        'footer-nav-chef': 'El Chef',
+        'footer-nav-reserve': 'Reservas',
+        'footer-copy': '© 2026 Maison Ardent. Todos los derechos reservados.',
+        'footer-tagline': 'Diseñado para el placer de la buena compañía.',
+      }
+    };
+
+    function setLanguage(lang) {
+      const t = translations[lang];
+      if (!t) return;
+
+      document.documentElement.lang = lang;
+      localStorage.setItem('ma-lang', lang);
+
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.lang === lang);
+      });
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (t[key] !== undefined) el.textContent = t[key];
+      });
+
+      document.querySelectorAll('[data-i18n-html]').forEach(el => {
+        const key = el.dataset.i18nHtml;
+        if (t[key] !== undefined) el.innerHTML = t[key];
+      });
+
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+        const key = el.dataset.i18nPlaceholder;
+        if (t[key] !== undefined) el.placeholder = t[key];
+      });
+    }
+
+    // Nav scroll state
+    const nav = document.getElementById('main-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 80);
+    });
+
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Menu tabs
+    document.querySelectorAll('.menu-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Reservation form
+    function handleReservation(e) {
+      e.preventDefault();
+      document.getElementById('reservation-form').style.display = 'none';
+      document.getElementById('form-success').classList.add('visible');
+    }
+
+    // Init language from localStorage or default to 'en'
+    setLanguage(localStorage.getItem('ma-lang') || 'en');
+  </script>
+</body>
+</html>
